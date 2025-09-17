@@ -37,7 +37,7 @@ jobs:
   - name: Git Checkout one
     tasks:
       checkout:
-        enabled: true
+        enabled: false
         private_repo: true
         # --- required / important fields your function expects ---
         clone_dir: /home/crowuser/cli
@@ -50,17 +50,17 @@ jobs:
   - name: Image Build Stage
     tasks:
       docker_build:
-        enabled: true
+        enabled: false
         image_name: env=IMAGE_NAME
-        build_tag: V0.1.33
+        build_tag: V0.1.34
         dockerfile_path: /home/crowuser/cli/screenplay/Dockerfile     
 
   - name: docker push stage
     tasks:
       docker_push:
-        enabled: true
+        enabled: false
         provider: azure
         image_name: env=IMAGE_NAME
-        image_tag: V0.1.33
+        image_tag: V0.1.34
         username: env=DOCKER_USERNAME
         password: env=DOCKER_PASSWORD
