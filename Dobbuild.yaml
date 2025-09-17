@@ -14,14 +14,14 @@ environment:
   IMAGE_NAME:    { value: crowstore://cliimage }
 
   # These must match the *names after* crowstore:// exactly (uppercased, no extra underscores).
-  CROWSTORE_TOKEN_CLIHURL:   { value: 70c01fcf939091adb9bdb0054c44b625 }
+  CROWSTORE_TOKEN_CLIHURL:   { value: 8305d52f6dd08c182897731214a0800e }
 
   CROWSTORE_TOKEN_GITTOKEN:    { value: ee63e33b6b98a72756d732e115a5d256 }
  
   CROWSTORE_TOKEN_DOCKERUSERNAME: { value: 96432ccb7604b08bc8e62fcdb593e192 }
   CROWSTORE_TOKEN_DOCKERPASSWORD: { value: f4cdb4396653f858b2bc1a2897a354ac }
   
-  CROWSTORE_TOKEN_CLIIMAGE: { value: b9e0d0fb3cff681487f18650980ec0af }
+  CROWSTORE_TOKEN_CLIIMAGE: { value: 47442d880e1a070ebf20cc6b818db56b }
 
 jobs:
 - name: CROW CLI BUILD
