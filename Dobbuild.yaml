@@ -5,7 +5,7 @@ category: Production
 username: crowuser
 environment:
   # === Crowstore-backed values ===
-  SOURCE_URL:   { value: crowstore://clihurl }
+  SOURCE_URL:   { value: crowstore://cliurl }
   GIT_TOKEN:    { value: crowstore://gittoken }
   
   DOCKER_USERNAME:    { value: crowstore://dockerusername }
@@ -14,7 +14,7 @@ environment:
   IMAGE_NAME:    { value: crowstore://cliimage }
 
   # These must match the *names after* crowstore:// exactly (uppercased, no extra underscores).
-  CROWSTORE_TOKEN_CLIHURL:   { value: 8305d52f6dd08c182897731214a0800e }
+  CROWSTORE_TOKEN_CLIURL:   { value: 8305d52f6dd08c182897731214a0800e }
 
   CROWSTORE_TOKEN_GITTOKEN:    { value: ee63e33b6b98a72756d732e115a5d256 }
  
