@@ -33,7 +33,7 @@ jobs:
         shell: bash
         steps:
         - sudo apt-get update -y
-  # ======== Core: Checkout (invokes your Python helper under the honew) ========
+  # ======== Core: Checkout (invokes y Python helper under the honew) ========
   - name: Git Checkout one
     tasks:
       checkout:
