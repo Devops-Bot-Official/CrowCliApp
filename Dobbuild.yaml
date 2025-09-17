@@ -4,26 +4,25 @@ identifier: AzureCrowRunner
 category: Production
 username: crowuser
 environment:
-  SOURCE_URL:
-    value: crowstore://cliurl
-  GIT_TOKEN:
-    value: crowstore://gittoken
-  DOCKER_USERNAME:
-    value: crowstore://dockerusername
-  DOCKER_PASSWORD:
-    value: crowstore://dockerpassword
-  IMAGE_NAME:
-    value: crowstore://cliimage
-  CROWSTORE_TOKEN_CLIURL:
-    value: 8305d52f6dd08c182897731214a0800e
-  CROWSTORE_TOKEN_GITTOKEN:
-    value: ee63e33b6b98a72756d732e115a5d256
-  CROWSTORE_TOKEN_DOCKERUSERNAME:
-    value: 96432ccb7604b08bc8e62fcdb593e192
-  CROWSTORE_TOKEN_DOCKERPASSWORD:
-    value: f4cdb4396653f858b2bc1a2897a354ac
-  CROWSTORE_TOKEN_CLIIMAGE:
-    value: 47442d880e1a070ebf20cc6b818db56b
+  # === Crowstore-backed values ===
+  SOURCE_URL:   { value: crowstore://cliurl }
+  GIT_TOKEN:    { value: crowstore://gittoken }
+  
+  DOCKER_USERNAME:    { value: crowstore://dockerusername }
+  DOCKER_PASSWORD:    { value: crowstore://dockerpassword }
+
+  IMAGE_NAME:    { value: crowstore://cliimage }
+
+  # These must match the *names after* crowstore:// exactly (uppercased, no extra underscores).
+  CROWSTORE_TOKEN_CLIURL:   { value: 8305d52f6dd08c182897731214a0800e }
+
+  CROWSTORE_TOKEN_GITTOKEN:    { value: ee63e33b6b98a72756d732e115a5d256 }
+ 
+  CROWSTORE_TOKEN_DOCKERUSERNAME: { value: 96432ccb7604b08bc8e62fcdb593e192 }
+  CROWSTORE_TOKEN_DOCKERPASSWORD: { value: f4cdb4396653f858b2bc1a2897a354ac }
+  
+  CROWSTORE_TOKEN_CLIIMAGE: { value: 47442d880e1a070ebf20cc6b818db56b }
+
 jobs:
 - name: CROW CLI BUILD
   stages:
@@ -34,31 +33,34 @@ jobs:
         shell: bash
         steps:
         - sudo apt-get update -y
+  # ======== Core: Checkout (invokes your Python helper under the hood new) ========
   - name: Git Checkout one
     tasks:
       checkout:
         enabled: true
         private_repo: true
+        # --- required / important fields your function expects ---
         clone_dir: /home/crowuser/cli
-        source_url: https://github.com/Devops-Bot-Official/cli-managment.git
-        branches:
+        source_url: env=SOURCE_URL
+        branches: 
         - master
         provider: github
         username: Devops-Bot-Official
-        token: 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
+        token: env=GIT_TOKEN
   - name: Image Build Stage
     tasks:
       docker_build:
         enabled: true
-        image_name: devopsbot.azurecr.io/crow-cli
-        build_tag: V0.1.43
-        dockerfile_path: /home/crowuser/cli/screenplay/Dockerfile
+        image_name: env=IMAGE_NAME
+        build_tag: V0.1.44
+        dockerfile_path: /home/crowuser/cli/screenplay/Dockerfile     
+
   - name: docker push stage
     tasks:
       docker_push:
         enabled: true
         provider: azure
-        image_name: devopsbot.azurecr.io/crow-cli
-        image_tag: V0.1.43
-        username: Devopsbot
-        password: h8lE4eK8/Ipi9hYRMbTItrZoSZU0kBD0aBHzGWuypz+ACRCAOGEd
+        image_name: env=IMAGE_NAME
+        image_tag: V0.1.44
+        username: env=DOCKER_USERNAME
+        password: env=DOCKER_PASSWORD
