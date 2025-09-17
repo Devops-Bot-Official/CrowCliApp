@@ -52,7 +52,7 @@ jobs:
       docker_build:
         enabled: true
         image_name: env=IMAGE_NAME
-        build_tag: V0.1.35
+        build_tag: V0.1.36
         dockerfile_path: /home/crowuser/cli/screenplay/Dockerfile     
 
   - name: docker push stage
@@ -61,6 +61,6 @@ jobs:
         enabled: true
         provider: azure
         image_name: env=IMAGE_NAME
-        image_tag: V0.1.35
+        image_tag: V0.1.36
         username: env=DOCKER_USERNAME
         password: env=DOCKER_PASSWORD
