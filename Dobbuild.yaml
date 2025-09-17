@@ -1,26 +1,66 @@
 version: '1.0'
 mode: remote
-identifier: CrowAks
+identifier: AzureCrowRunner
 category: Production
-username: devopsbot
+username: crowuser
+environment:
+  # === Crowstore-backed values ===
+  SOURCE_URL:   { value: crowstore://cliurl }
+  GIT_TOKEN:    { value: crowstore://gittoken }
+  
+  DOCKER_USERNAME:    { value: crowstore://dockerusername }
+  DOCKER_PASSWORD:    { value: crowstore://dockerpassword }
+
+  IMAGE_NAME:    { value: crowstore://cliimage }
+
+  # These must match the *names after* crowstore:// exactly (uppercased, no extra underscores).
+  CROWSTORE_TOKEN_CLIURL:   { value: 8305d52f6dd08c182897731214a0800e }
+
+  CROWSTORE_TOKEN_GITTOKEN:    { value: ee63e33b6b98a72756d732e115a5d256 }
+ 
+  CROWSTORE_TOKEN_DOCKERUSERNAME: { value: 96432ccb7604b08bc8e62fcdb593e192 }
+  CROWSTORE_TOKEN_DOCKERPASSWORD: { value: f4cdb4396653f858b2bc1a2897a354ac }
+  
+  CROWSTORE_TOKEN_CLIIMAGE: { value: 47442d880e1a070ebf20cc6b818db56b }
+
 jobs:
-- name: CROW CLI DEPLOYMENT
+- name: CROW CLI BUILD
   stages:
-  - name: K8s | Update image & Scale
+  - name: Updating Runner Server
     tasks:
-      kubernetes:
-        enabled: true
-        kubeconfig_path: /home/devopsbot/.kube/config
-        namespace: tenant-dob-985968
-        dry_run: false
-        verbose: false
+      shell:
+        enabled: false
+        shell: bash
         steps:
-        - action: set_image
-          kind: deployment
-          name: dob-985968-cli
-          container: dob-985968-cli
-          image: devopsbot.azurecr.io/crow-cli:V0.1.41
-        - action: rollout_status
-          kind: deployment
-          name: dob-985968-cli
-          timeout: 240s
+        - sudo apt-get update -y
+  # ======== Core: Checkout (invokes your Python helper under the hood new) ========
+  - name: Git Checkout one
+    tasks:
+      checkout:
+        enabled: true
+        private_repo: true
+        # --- required / important fields your function expects ---
+        clone_dir: /home/crowuser/cli
+        source_url: env=SOURCE_URL
+        branches: 
+        - master
+        provider: github
+        username: Devops-Bot-Official
+        token: env=GIT_TOKEN
+  - name: Image Build Stage
+    tasks:
+      docker_build:
+        enabled: true
+        image_name: env=IMAGE_NAME
+        build_tag: V0.1.42
+        dockerfile_path: /home/crowuser/cli/screenplay/Dockerfile     
+
+  - name: docker push stage
+    tasks:
+      docker_push:
+        enabled: true
+        provider: azure
+        image_name: env=IMAGE_NAME
+        image_tag: V0.1.42
+        username: env=DOCKER_USERNAME
+        password: env=DOCKER_PASSWORD
